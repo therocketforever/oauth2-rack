@@ -1,0 +1,11 @@
+.DS_Store
+.bundle
+\#*
+.\#*
+*~
+*swp
+TAGS
+.rvmrc
+.yardoc
+/doc/*
+Gemfile.lock
