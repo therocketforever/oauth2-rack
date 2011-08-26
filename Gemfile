@@ -1,21 +1,7 @@
 source :rubygems
 
-gem 'rake'
-gem 'rack'
-gem 'multi_json'
+gemspec
 
-group :development do
-  gem 'shotgun'
-end
+gem 'libnotify'
+gem 'rb-inotify'
 
-group :test, :development do
-  gem 'rspec'
-
-  gem 'guard-rspec'
-
-  # for guard on Linux
-  gem 'libnotify'
-  gem 'rb-inotify'
-
-  gem 'oauth2' # for testing client examples
-end
