@@ -16,4 +16,6 @@ group :test, :development do
   # for guard on Linux
   gem 'libnotify'
   gem 'rb-inotify'
+
+  gem 'oauth2' # for testing client examples
 end
