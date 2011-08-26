@@ -5,16 +5,20 @@ require 'oauth2/rack'
 class OAuth2::Rack::Authentication::Client::RequestParams
   def initialize(app, opts = {}, &authenticator)
     @app = app
+    @required = opts.fetch(:required, true)
+    opts.delete(:required)
     @authenticator = authenticator
   end
 
   def call(env)
+    return @app.call(env) if env.has_key?('oauth2.client')
+
     @request = Rack::Request.new(env)
 
     client_id = @request['client_id']
     client_secret = @request['client_secret']
     if client_id.nil? && client_secret.nil?
-      return unauthorized
+      return @required ? unauthorized : @app.call(env)
     elsif client_id.nil? || client_secret.nil?
       return bad_request
     end
@@ -36,8 +40,7 @@ class OAuth2::Rack::Authentication::Client::RequestParams
   def unauthorized
     [ 401,
       { 'Content-Type' => 'text/plain',
-        'Content-Length' => '0',
-        'WWW-Authenticate' => 'Basic realm="%s"' % @realm },
+        'Content-Length' => '0' },
       []
     ]
   end

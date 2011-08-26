@@ -6,9 +6,13 @@ map '/inspect' do
 end
 
 map '/client_credentials/access_token' do
-  use OAuth2::Rack::Authentication::Client::HTTPBasic do |opts|
+  use OAuth2::Rack::Authentication::Client::HTTPBasic, :required => false do |opts|
     OpenStruct.new(:username => opts[:username])
   end
+  use OAuth2::Rack::Authentication::Client::RequestParams, :required => false do |opts|
+    OpenStruct.new(:username => opts[:username])
+  end
+
   use OAuth2::Rack::Authorization::ClientCredentials::AccessTokenIssuer do |opts|
     {
       'access_token' => 'test'

@@ -10,10 +10,29 @@ describe OAuth2::Rack::Authentication::Client::HTTPBasic do
     post '/', opts
   end
 
-  context 'when auth header is not specified' do
-    it 'responds with 401 unauthorized' do
+  context 'when oauth2.client is already set' do
+    it 'continues the app' do
+      opts['oauth2.client'] = client
+      chained_app.should_receive(:call).with(hash_including('oauth2.client' => client)).and_return(chained_app_response)
       do_request
-      response.status.should eq(401)
+      response.status.should eq(200)
+    end
+  end
+
+  context 'when auth header is not specified' do
+    context 'and http basic auth is required' do
+      it 'responds with 401 unauthorized' do
+        do_request
+        response.status.should eq(401)
+      end
+    end
+    context 'and http basic auth is optional' do
+      app { OAuth2::Rack::Authentication::Client::HTTPBasic.new(chained_app, :required => false) }
+      it 'continues the app' do
+        chained_app.should_receive(:call).with(hash_not_including('oauth2.client')).and_return(chained_app_response)
+        do_request
+        response.status.should eq(200)
+      end
     end
   end
 

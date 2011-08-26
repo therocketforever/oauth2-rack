@@ -7,15 +7,19 @@ class OAuth2::Rack::Authentication::Client::HTTPBasic
   def initialize(app, opts = {}, &authenticator)
     @app = app
     @realm = opts.delete(:realm)
+    @required = opts.fetch(:required, true)
+    opts.delete(:required)
     @authenticator = authenticator
   end
 
   def call(env)
+    return @app.call(env) if env.has_key?('oauth2.client')
+
     key = HEADER_KEYS.find { |k| env.has_key?(k) }
     auth_string = env[key]
 
     if auth_string.nil?
-      return unauthorized
+      return @required ? unauthorized : @app.call(env)
     end
 
     schema, credentials = auth_string.split(' ', 2)
@@ -32,7 +36,7 @@ class OAuth2::Rack::Authentication::Client::HTTPBasic
       unauthorized
     end
   end
-  
+
   private
   def authenticate(opts)
     @authenticator && @authenticator.call(opts)

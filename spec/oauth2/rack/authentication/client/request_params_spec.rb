@@ -11,10 +11,29 @@ describe OAuth2::Rack::Authentication::Client::RequestParams do
     post '/', opts
   end
 
-  context 'when client_id and client_secret are both missed' do
-    it 'responds with 401 unauthorized' do
+  context 'when oauth2.client is already set' do
+    it 'continues the app' do
+      opts['oauth2.client'] = client
+      chained_app.should_receive(:call).with(hash_including('oauth2.client' => client)).and_return(chained_app_response)
       do_request
-      response.status.should eq(401)
+      response.status.should eq(200)
+    end
+  end
+
+  context 'when client_id and client_secret are both missed' do
+    context 'and request params auth is required' do
+      it 'responds with 401 unauthorized' do
+        do_request
+        response.status.should eq(401)
+      end
+    end
+    context 'and request params auth is optional' do
+      app { OAuth2::Rack::Authentication::Client::RequestParams.new(chained_app, :required => false) }
+      it 'continues the app' do
+        chained_app.should_receive(:call).with(hash_not_including('oauth2.client')).and_return(chained_app_response)
+        do_request
+        response.status.should eq(200)
+      end
     end
   end
 
