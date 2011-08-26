@@ -1,27 +1,19 @@
 $: << File.expand_path('../lib', __FILE__)
 require 'oauth2/rack'
 
-access_token_finder = proc { |options|
-  {
-    'access_token' => 'test'
-  }
-}
-
-client_authentication_proc = proc { }
-
-class MockClient
-  def initialize(app)
-    @app = app
-  end
-
-  def call(env)
-    env['oauth2.client'] = Object.new
-    @app.call(env)
-  end
+map '/inspect' do
+  run proc { |env| [200, {'Content-Type' => 'text/html'}, [env.inspect]] }
 end
 
 map '/client_credentials/access_token' do
-  use MockClient
-  use OAuth2::Rack::Authorization::ClientCredentials::AccessTokenIssuer, :access_token_finder => access_token_finder
+  use OAuth2::Rack::Authentication::Client::HTTPBasic do |opts|
+    OpenStruct.new(:username => opts[:username])
+  end
+  use OAuth2::Rack::Authorization::ClientCredentials::AccessTokenIssuer do |opts|
+    {
+      'access_token' => 'test'
+    }
+  end
   run proc { [200, {'Content-Type' => 'text/html'}, ['Hello']] }
 end
+
