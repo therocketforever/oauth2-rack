@@ -27,4 +27,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'shotgun'
   s.add_development_dependency 'guard-rspec'
   s.add_development_dependency 'oauth2'
+
+  s.add_development_dependency 'yard'
+  s.add_development_dependency 'rdiscount'
 end
