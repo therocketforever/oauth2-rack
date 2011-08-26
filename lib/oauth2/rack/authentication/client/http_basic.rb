@@ -9,7 +9,7 @@ class OAuth2::Rack::Authentication::Client::HTTPBasic
     @realm = opts.delete(:realm)
     @required = opts.fetch(:required, true)
     opts.delete(:required)
-    @authenticator = authenticator
+    @authenticator = authenticator || opts.delete(:authenticator)
   end
 
   def call(env)

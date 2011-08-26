@@ -1,8 +1,8 @@
-# @see 4.4.1 Client Credentials
+# @see 4.3. Resource Owner Password Credentials
 require 'oauth2/rack'
 require 'multi_json'
 
-class OAuth2::Rack::Authorization::ClientCredentials::AccessTokenIssuer
+class OAuth2::Rack::Authorization::Password::AccessTokenIssuer
   def initialize(app, opts = {}, &issuer)
     @app = app
 
@@ -10,18 +10,20 @@ class OAuth2::Rack::Authorization::ClientCredentials::AccessTokenIssuer
   end
 
   def call(env)
-    client = env['oauth2.client']
-    unless client
-      return error_response(:error => 'invalid_client')
+    resource_owner = env['oauth2.resource_owner']
+    unless resource_owner
+      return error_response(:error => 'invalid_grant')
     end
 
     request = Rack::Request.new(env)
-    unless request['grant_type'] == 'client_credentials'
+    unless request['grant_type'] == 'password'
       return error_response(:error => 'invalid_request')
     end
 
-    access_token = find_acccess_token(:grant_type => 'client_credentials',
-                                      :client => client,
+    # oauth2.client is set in client authentication
+    access_token = find_acccess_token(:grant_type => 'password',
+                                      :resource_owner => resource_owner,
+                                      :client => env['oath2.client'],
                                       :scope => request['scope'])
 
     if access_token['error']

@@ -1,8 +1,7 @@
 require 'oauth2/rack'
 
-# 2.4.1. Client Password
-# Send client_id and client_secret in request params
-class OAuth2::Rack::Authentication::Client::RequestParams
+# Authenticate resource owner with request params
+class OAuth2::Rack::Authentication::ResourceOwner::RequestParams
   def initialize(app, opts = {}, &authenticator)
     @app = app
     @required = opts.fetch(:required, true)
@@ -11,21 +10,21 @@ class OAuth2::Rack::Authentication::Client::RequestParams
   end
 
   def call(env)
-    return @app.call(env) if env.has_key?('oauth2.client')
+    return @app.call(env) if env.has_key?('oauth2.resource_owner')
 
     @request = Rack::Request.new(env)
 
-    client_id = @request['client_id']
-    client_secret = @request['client_secret']
-    if client_id.nil? && client_secret.nil?
+    username = @request['username']
+    password = @request['password']
+    if username.nil? && password.nil?
       return @required ? unauthorized : @app.call(env)
-    elsif client_id.nil? || client_secret.nil?
+    elsif username.nil? || password.nil?
       return bad_request
     end
 
-    client = @authenticator.call(:client_id => client_id, :client_secret => client_secret)
-    if client
-      env['oauth2.client'] = client
+    resource_owner = @authenticator.call(:username => username, :password => password)
+    if resource_owner
+      env['oauth2.resource_owner'] = resource_owner
       @app.call(env)
     else
       unauthorized
@@ -44,7 +43,7 @@ class OAuth2::Rack::Authentication::Client::RequestParams
       []
     ]
   end
-
+  
   def bad_request
     [ 400,
       { 'Content-Type' => 'text/plain',
