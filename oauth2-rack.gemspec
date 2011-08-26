@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.homepage    = "https://github.com/doitian/oauth2-rack"
   s.summary     = %q{Rack middlewares for OAuth2 authorization server and resource server}
   s.description = %q{Rack middlewares for OAuth2 authorization server and resource server}
-
+  s.license     = 'MIT'
   s.rubyforge_project = "oauth2-rack"
 
   s.files         = `git ls-files`.split("\n")
