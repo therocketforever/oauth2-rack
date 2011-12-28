@@ -8,6 +8,5 @@ TAGS
 .rvmrc
 .yardoc
 /doc/*
-Gemfile.lock
 *.gem
 pkg/*

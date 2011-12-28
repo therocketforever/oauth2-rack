@@ -16,6 +16,16 @@ See an example in `config.ru`.
 Forck the repository, make your changes and issue a pull request. Do add test
 cases so I won't break your code in feature releases.
 
+### Bunder ###
+
+For Linux:
+
+    bundle install --without mac_development
+
+For Mac:
+
+    bundle install --without linux_development
+
 ## License
 
 oauth2-rack is licensed under the MIT License.
