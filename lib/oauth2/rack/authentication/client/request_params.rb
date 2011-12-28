@@ -1,6 +1,6 @@
 require 'oauth2/rack'
 
-# 2.4.1. Client Password
+# 2.3.1. Client Password
 # Send client_id and client_secret in request params
 class OAuth2::Rack::Authentication::Client::RequestParams
   def initialize(app, opts = {}, &authenticator)
@@ -23,7 +23,8 @@ class OAuth2::Rack::Authentication::Client::RequestParams
       return bad_request
     end
 
-    client = @authenticator.call(:client_id => client_id, :client_secret => client_secret)
+    client = @authenticator.call(:client_id => client_id,
+                                 :client_secret => client_secret)
     if client
       env['oauth2.client'] = client
       @app.call(env)

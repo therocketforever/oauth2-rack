@@ -22,7 +22,13 @@ class OAuth2::Rack::Authentication::ResourceOwner::RequestParams
       return bad_request
     end
 
-    resource_owner = @authenticator.call(:username => username, :password => password)
+    credentials = {
+      :username => username,
+      :password => password
+    }
+    credentials[:client] = env['oauth2.client'] if env['oauth2.client']
+    resource_owner = @authenticator.call credentials
+
     if resource_owner
       env['oauth2.resource_owner'] = resource_owner
       @app.call(env)
@@ -30,7 +36,7 @@ class OAuth2::Rack::Authentication::ResourceOwner::RequestParams
       unauthorized
     end
   end
-  
+
   private
   def authenticate(opts)
     @authenticator && @authenticator.call(opts)

@@ -1,6 +1,6 @@
 require 'oauth2/rack'
 
-# 2.4.1. Client Password
+# 2.3.1. Client Password
 class OAuth2::Rack::Authentication::Client::HTTPBasic
   HEADER_KEYS = ['HTTP_AUTHORIZATION', 'X-HTTP_AUTHORIZATION', 'X_HTTP_AUTHORIZATION']
 
@@ -28,7 +28,9 @@ class OAuth2::Rack::Authentication::Client::HTTPBasic
     end
 
     client_id, client_secret = credentials.unpack('m*').first.split(':', 2)
-    client = @authenticator.call(:client_id => client_id, :client_secret => client_secret)
+    client = @authenticator.call(:client_id => client_id,
+                                 :client_secret => client_secret)
+
     if client
       env['oauth2.client'] = client
       @app.call(env)
