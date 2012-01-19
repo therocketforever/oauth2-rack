@@ -38,11 +38,13 @@ describe OAuth2::Rack::Authorization::Password::AccessTokenIssuer do
       end
 
       context 'and issuer is specified' do
+        before { opts['oauth2.client'] = client }
+
         let(:issuer) { double('issuer') }
         let(:expected_find_opts) {
           Hash[:grant_type => 'password',
                :resource_owner => resource_owner,
-               :client => nil,
+               :client => client,
                :scope => nil]
         }
 

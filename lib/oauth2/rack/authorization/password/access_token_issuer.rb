@@ -23,7 +23,7 @@ class OAuth2::Rack::Authorization::Password::AccessTokenIssuer
     # oauth2.client is set in client authentication
     access_token = find_acccess_token(:grant_type => 'password',
                                       :resource_owner => resource_owner,
-                                      :client => env['oath2.client'],
+                                      :client => env['oauth2.client'],
                                       :scope => request['scope'])
 
     if access_token['error']
