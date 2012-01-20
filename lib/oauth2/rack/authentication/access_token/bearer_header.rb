@@ -16,13 +16,13 @@ class OAuth2::Rack::Authentication::AccessToken::BearerHeader
     auth_string = env[key]
 
     if auth_string.nil?
-      return @required ? error_response(:code => 400, :error => :invalid_request) : @app.call(env)
+      return @required ? error_response('code' => 400, 'error' => 'invalid_request') : @app.call(env)
     end
 
     schema, credentials = auth_string.split(' ', 2)
     if schema.downcase != 'bearer'
-      return error_response(:code => 400,
-                            :error => :invalid_request)
+      return error_response('code' => 400,
+                            'error' => 'invalid_request')
     end
 
     access_grant = @authenticator.call(:access_token => credentials)
@@ -42,10 +42,10 @@ class OAuth2::Rack::Authentication::AccessToken::BearerHeader
 
   def error_response(opts)
     opts ||= {}
-    code = opts.delete(:code) || 401
-    
-    opts[:realm] = @realm if @realm
-    opts[:error] ||= 'invalid_token'
+    code = opts.delete('code') || 401
+
+    opts['realm'] = @realm if @realm
+    opts['error'] ||= 'invalid_token'
 
     [ code,
       { 'Content-Type' => 'text/plain',

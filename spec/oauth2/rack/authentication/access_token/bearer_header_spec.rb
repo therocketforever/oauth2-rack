@@ -12,7 +12,7 @@ describe OAuth2::Rack::Authentication::AccessToken::BearerHeader do
 
   context 'when auth header is not specified' do
     context 'and bearer auth is required' do
-      it 'responds with 401 unauthorized' do
+      it 'responds with 400 unauthorized' do
         do_request
         response.status.should eq(400)
       end
