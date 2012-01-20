@@ -6,7 +6,7 @@ class OAuth2::Rack::Authorization::Password::AccessTokenIssuer
   def initialize(app, opts = {}, &issuer)
     @app = app
 
-    @issuer = issuer || opts.delete(:issuer)
+    @issuer = issuer || opts[:issuer]
   end
 
   def call(env)

@@ -6,8 +6,7 @@ class OAuth2::Rack::Authentication::Client::RequestParams
   def initialize(app, opts = {}, &authenticator)
     @app = app
     @required = opts.fetch(:required, true)
-    opts.delete(:required)
-    @authenticator = authenticator || opts.delete(:authenticator)
+    @authenticator = authenticator || opts[:authenticator]
   end
 
   def call(env)
