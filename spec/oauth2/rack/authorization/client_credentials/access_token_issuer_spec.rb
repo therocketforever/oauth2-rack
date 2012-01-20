@@ -28,11 +28,11 @@ describe OAuth2::Rack::Authorization::ClientCredentials::AccessTokenIssuer do
       before { opts[:params] = params }
 
       context 'and issuer is not specified' do
-        it 'responds with unauthorized_client' do
+        it 'responds with invalid_grant' do
           do_request
 
           response.status.should eq(400)
-          response_object['error'].should eq('unauthorized_client')
+          response_object['error'].should eq('invalid_grant')
         end
       end
 
@@ -62,11 +62,11 @@ describe OAuth2::Rack::Authorization::ClientCredentials::AccessTokenIssuer do
             before {
               issuer.should_receive(:call).with(expected_find_opts).and_return(nil)
             }
-            it 'responds with unauthorized_client' do
+            it 'responds with invalid_grant' do
               do_request
 
               response.status.should eq(400)
-              response_object['error'].should eq('unauthorized_client')
+              response_object['error'].should eq('invalid_grant')
             end
           end
           

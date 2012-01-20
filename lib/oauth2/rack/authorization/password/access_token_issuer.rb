@@ -37,7 +37,7 @@ class OAuth2::Rack::Authorization::Password::AccessTokenIssuer
   def find_acccess_token(opts)
     if @issuer
       @issuer.call(opts)
-    end || { 'error' => 'unauthorized_client' }
+    end || { 'error' => 'invalid_grant' }
   end
 
   def successful_response(response_object)
