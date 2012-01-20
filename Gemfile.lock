@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    oauth2-rack (0.0.4)
+    oauth2-rack (0.0.5)
       multi_json
       rack
 
