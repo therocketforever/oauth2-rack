@@ -86,6 +86,12 @@ describe OAuth2::Rack::Authorization::RefreshToken::AccessTokenIssuer do
           response.status.should eq(200)
           response_object['access_token'].should eq('X')
         end
+
+        it 'responds with default token type' do
+          do_request
+
+          response_object['token_type'].should eq('bearer')
+        end
       end
     end
   end

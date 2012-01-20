@@ -29,6 +29,7 @@ class OAuth2::Rack::Authorization::Password::AccessTokenIssuer
     if access_token['error']
       error_response(access_token)
     else
+      access_token['token_type'] ||= 'bearer'
       successful_response(access_token)
     end
   end
