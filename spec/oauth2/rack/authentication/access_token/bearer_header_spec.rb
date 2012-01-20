@@ -47,7 +47,7 @@ describe OAuth2::Rack::Authentication::AccessToken::BearerHeader do
     context 'and credentials are valid' do
       it 'sets oauth2.client in env' do
         authenticator.should_receive(:call).with(:access_token => access_token).and_return(access_token)
-        chained_app.should_receive(:call).with(hash_including('oauth2.access_token' => access_token)).and_return(chained_app_response)
+        chained_app.should_receive(:call).with(hash_including('oauth2.access_grant' => access_token)).and_return(chained_app_response)
 
         do_request
       end

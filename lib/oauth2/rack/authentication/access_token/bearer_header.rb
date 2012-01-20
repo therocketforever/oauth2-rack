@@ -25,12 +25,12 @@ class OAuth2::Rack::Authentication::AccessToken::BearerHeader
                             :error => :invalid_request)
     end
 
-    access_token = @authenticator.call(:access_token => credentials)
+    access_grant = @authenticator.call(:access_token => credentials)
 
-    if access_token.nil? || (access_token.is_a?(Hash) && access_token[:error])
-      error_response(access_token)
+    if access_grant.nil? || (access_grant.is_a?(Hash) && access_grant[:error])
+      error_response(access_grant)
     else
-      env['oauth2.access_token'] = access_token
+      env['oauth2.access_grant'] = access_grant
       @app.call(env)
     end
   end
